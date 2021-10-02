@@ -19,5 +19,6 @@ namespace Infrastructure.Data
         public DbSet<Friend> Friends { get; set; }
         public DbSet<FriendResponse> FriendResponses { get; set; }
         public DbSet<Adjective> Adjectives { get; set; }
+        public DbSet<ApplicationUser> ApplicationUser { get; set; }
     }
 }

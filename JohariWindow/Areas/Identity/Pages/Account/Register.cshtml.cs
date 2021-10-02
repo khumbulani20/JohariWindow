@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using ApplicationCore.Models;
+using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -24,17 +25,22 @@ namespace JohariWindow.Areas.Identity.Pages.Account
         private readonly UserManager< ApplicationUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        //added role manager
+        private readonly RoleManager<IdentityRole> _roleManager;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,// added role manager
+            RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            // added role manager
+            _roleManager = roleManager;
         }
 
         [BindProperty]
@@ -61,6 +67,15 @@ namespace JohariWindow.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+
+            //ADDED THESE LINES
+            [Required]
+            public string FirstName { get; set; }
+            [Required]
+            public string LastName { get; set; }
+            [Required]
+            public string PhoneNumber { get; set; }
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -71,14 +86,54 @@ namespace JohariWindow.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
+            //retrieve the role from the form
+            string role = Request.Form["rdUserRole"].ToString();
+            if (role == "") { role = SD.AdminRole; } //make the first login a manager)
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email };
+                //expand identityuser with applicationuser properties
+                var user = new ApplicationUser
+                {
+                    UserName = Input.Email,
+                    Email = Input.Email,
+                    FirstName = Input.FirstName,
+                    LastName = Input.LastName,
+                    PhoneNumber = Input.PhoneNumber
+                };
                 var result = await _userManager.CreateAsync(user, Input.Password);
+
+                //add the roles to the ASPNET Roles table if they do not exist yet
+                if (!await _roleManager.RoleExistsAsync(SD.AdminRole))
+                {
+                    _roleManager.CreateAsync(new IdentityRole(SD.AdminRole)).GetAwaiter().GetResult();
+                    _roleManager.CreateAsync(new IdentityRole(SD.ClientRole)).GetAwaiter().GetResult();
+                    _roleManager.CreateAsync(new IdentityRole(SD.FriendRole)).GetAwaiter().GetResult();
+                  
+                }
                 if (result.Succeeded)
                 {
+                    //assign role to the user (from the form radio options available after the first manager is created)
+                    if (role == SD.ClientRole)
+                    {
+                        await _userManager.AddToRoleAsync(user, SD.ClientRole);
+                    }
+                    else
+                    {
+                        if (role == SD.FriendRole)
+                        {
+                            await _userManager.AddToRoleAsync(user, SD.FriendRole);
+                        }
+                        else
+                        {
+                            if (role == SD.AdminRole)
+                            {
+                                await _userManager.AddToRoleAsync(user, SD.AdminRole);
+                            }
+                            
+                        }
+                    }
                     _logger.LogInformation("User created a new account with password.");
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
