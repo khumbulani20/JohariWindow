@@ -106,7 +106,7 @@ namespace JohariWindow.Pages.Clients
 
 
             _unitOfWork.Commit();
-            return RedirectToPage("./Upsert");
+            return RedirectToPage("./Index");
 
             //return Page();
         }
