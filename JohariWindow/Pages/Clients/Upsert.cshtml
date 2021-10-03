@@ -1,12 +1,12 @@
 ﻿@page
-@model JohariWindow.Pages.Clients.IndexModel
+@model JohariWindow.Pages.Clients.UpsertModel
 @{
 }
- 
+
 <form method="post">
     <h2>Select 7 positive attributes</h2>
 
-    <table class="table table-borderless">
+    <table class="table table-borderless" id="pos">
         @{ var j = 0;
 
             for (int i = 0; i < Model.ClientObj.AdjectivesList.Count; i++)
@@ -49,7 +49,7 @@
                     <td>
                         <input asp-for="@Model.ClientObj.AdjectivesList[i].Value" type="hidden" />
                         <input asp-for="@Model.ClientObj.AdjectivesList[i].Text" type="hidden" />
-                        <input asp-for="@Model.ClientObj.AdjectivesList[i].Selected" />
+                        <input asp-for="@Model.ClientObj.AdjectivesList[i].Selected" class="positiveCBox"  onclick='chkcontrol(1)'/>
                         @Model.ClientObj.AdjectivesList[i].Text
                     </td>
 
@@ -64,7 +64,7 @@
     </table>
     <br />
     <h2>Select 12 positive attributes</h2>
-    <table class="table table-borderless">
+    <table class="table table-borderless" id="neg">
         @{ var k = 0;
 
             for (int i = 0; i < Model.ClientObj.AdjectivesList.Count; i++)
@@ -104,12 +104,12 @@
 
                     k += 1;
 
-                    <td>
-                        <input asp-for="@Model.ClientObj.AdjectivesList[i].Value" type="hidden" />
-                        <input asp-for="@Model.ClientObj.AdjectivesList[i].Text" type="hidden" />
-                        <input asp-for="@Model.ClientObj.AdjectivesList[i].Selected" />
-                        @Model.ClientObj.AdjectivesList[i].Text
-                    </td>
+    <td>
+        <input asp-for="@Model.ClientObj.AdjectivesList[i].Value" type="hidden" />
+        <input asp-for="@Model.ClientObj.AdjectivesList[i].Text" type="hidden" /> 
+        <input asp-for="@Model.ClientObj.AdjectivesList[i].Selected" class="negativeCBox" />
+        @Model.ClientObj.AdjectivesList[i].Text
+    </td>
 
                 }
 
@@ -128,6 +128,6 @@
 
 </form>
 @section Scripts{
-
+    <script src="~/js/checkboxvalidation.js"></script>
 
 }

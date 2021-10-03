@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace JohariWindow.Pages.Clients
 {
-    public class IndexModel : PageModel
+    public class UpsertModel : PageModel
     {
         private readonly IUnitOfWork _unitOfWork;
         [BindProperty]
@@ -29,7 +29,7 @@ namespace JohariWindow.Pages.Clients
         [TempData]
         public string SelectedAdjectiveIDs { get; set; }
 
-        public IndexModel(IUnitOfWork unitOfWork)
+        public UpsertModel(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
 
@@ -106,7 +106,7 @@ namespace JohariWindow.Pages.Clients
 
 
             _unitOfWork.Commit();
-            return RedirectToPage("./Index");
+            return RedirectToPage("./Client");
 
             //return Page();
         }

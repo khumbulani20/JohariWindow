@@ -1,0 +1,96 @@
+﻿@page
+@model JohariWindow.Pages.Clients.ClientModel
+
+@{
+    ViewData["Title"] = "Client Home gage";
+}
+<form method="post" asp-action="Client" name="clientForm" onsubmit="return validateForm()" required>
+
+    <div class="container">
+
+
+        @*<div class="row">
+                <div class="col-3">
+                    <label asp-for="ApplicationUserId">User id</label>
+
+                </div>
+                <div class="col-9">
+                    <input asp-for="ApplicationUserId" type="text" value="@Model.ApplicationUserId" readonly />
+
+                </div>
+            </div>*@
+        <br />
+        @*<div asp-validation-summary="All" class="text-danger"></div>
+        <div asp-validation-summary="All" class="col-12 px-3" style="border-bottom: 1px solid #325d88">*@
+            <div class="form-group row">
+                <div class="col-3">
+                    <label asp-for="ApplicationUserId">User id</label>
+
+                </div>
+                <div class="col-9">
+                    <input asp-for="ApplicationUserId" type="text" value="@Model.ApplicationUserId" readonly />
+
+                </div>
+            </div>
+            <br />
+            <h3> Invite 4 friends</h3>
+            <br />
+            <div class="form-group row">
+                <div class="col-3">
+                    <label asp-for="EmailOne">Friend 1 email:</label>
+
+                </div>
+                <div class="col-9">
+                    <input type="email" asp-for="EmailOne"  name="email1"/>
+                    
+                </div>
+            </div>
+            <br />
+            <div class="form-group row">
+                <div class="col-3">
+                    <label for="friend2">Friend 2 email:</label>
+
+                </div>
+                <div class="col-9">
+                    <input type="email" class="emails" name="email2"/>
+
+                </div>
+            </div>
+            <br />
+            <div class="form-group row">
+                <div class="col-3">
+                    <label for="friend3">Friend 3 email:</label>
+
+                </div>
+                <div class="col-9">
+                    <input type="email" class="emails" name="email3" />
+
+                </div>
+            </div>
+            <br />
+            <div class="form-group row">
+                <div class="col-3">
+                    <label for="friend4">Friend 4 email:</label>
+
+                </div>
+                <div class="col-9">
+                    <input type="email" class="emails" name="email4"/>
+
+                </div>
+            </div>
+
+            <br />
+            <div class="form-group row">
+                <div class="col-4">
+                    <button type="submit" class="btn btn-primary form-control"   id="invite">Invite</button>
+
+                </div>
+            </div>
+        </div>
+
+     
+
+</form>
+@section Scripts{
+    <script src="~/js/client.js"></script>
+}

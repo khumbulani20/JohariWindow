@@ -31,6 +31,13 @@ namespace JohariWindow
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //sessions
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(10);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
             services.AddRazorPages();
 
             //add ,sqlServerOptions => sqlServerOptions.MigrationsAssembly("Infrastructure")) 
@@ -101,6 +108,8 @@ namespace JohariWindow
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            //for sessions
+            app.UseSession();
             app.UseRouting();
             //added this and it needs to come before authorization
             app.UseAuthentication();
