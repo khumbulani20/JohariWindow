@@ -1,5 +1,5 @@
 ﻿function chkcontrol(j) {
-    alert("Please ")
+ 
     var total = 0;
     for (var i = 0; i < document.getElementsByClassName("negativeCBox").length  ; i++) {
         if (document.getElementsByClassName("negativeCBox")[i].checked) {

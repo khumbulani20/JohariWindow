@@ -5,7 +5,7 @@
     var x4 = document.forms["clientForm"]["email4"].value;
 
     if (x1 == ""||x2==""||x3==""||x4=="") {
-        alert("all emails  must be filled out");
+       
         return false;
     }
 }

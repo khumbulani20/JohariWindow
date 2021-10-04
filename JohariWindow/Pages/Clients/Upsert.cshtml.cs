@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using ApplicationCore.Interfaces;
 using ApplicationCore.Models;
@@ -19,6 +20,9 @@ namespace JohariWindow.Pages.Clients
         [BindProperty]
         public ClientVM ClientObj { get; set; }
 
+        //[BindProperty]
+        //public Client Client { get; set; }
+
         [BindProperty]
         public ClientResponse ClientResponseObj { get; set; }
 
@@ -36,9 +40,28 @@ namespace JohariWindow.Pages.Clients
         }
         public void OnGet()
         {
-            int id = 1;
+            //check if user is client or not
+           // var claimsIdentity = (ClaimsIdentity)this.User.Identity;
+           // var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+           //string user= claim.Value;
+           // int clientId;
+           // if(user==id)
+           // {
+           //     //use id to get clientid from client table
+           //    Client temp= _unitOfWork.Client.Get(u=>u.ASPNETUserID==id);
+           //     clientId = temp.ID;
+           //     //check if there are responses
+           //     ClientResponse resp = _unitOfWork.ClientResponse.Get(u => u.ClientID == clientId);
+           //     Console.WriteLine(resp);
+           // }
+           // else
+           // {
+           //     //friend
+           // }
+            
+            //int id = 1;
             //read data from adjectives table
-            // var adjectives = _unitOfWork.Adjective.List();
+            //var adjectives = _unitOfWork.Adjective.List();
             List<Adjective> AdjectiveList = (List<Adjective>)_unitOfWork.Adjective.List();
             foreach (Adjective a in AdjectiveList)
                 Console.WriteLine(a.AdjectiveID);
@@ -55,7 +78,78 @@ namespace JohariWindow.Pages.Clients
             };
 
         }
-        public IActionResult OnPost()
+        //public IActionResult OnPost(string userId)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return Page();
+        //    }
+        //    int id = 0;
+
+        //    //get client with specified id
+
+        //    if (userId != null)
+        //    {
+        //        Client tempClient = _unitOfWork.Client.Get(u => u.ASPNETUserID == userId);
+        //        //get client id
+        //        id = tempClient.ClientID;
+        //        foreach (SelectListItem Adjective in ClientObj.AdjectivesList)
+        //        {
+        //            if (Adjective.Selected)
+        //            {
+        //                //create a response
+        //                ClientResponse resp = new ClientResponse();
+        //                try
+        //                {
+        //                    resp.AdjectiveID = Int32.Parse(Adjective.Value);
+        //                    resp.ClientID = id;
+        //                    //save to db
+        //                    _unitOfWork.ClientResponse.Add(resp);
+
+        //                }
+        //                catch (FormatException)
+        //                {
+        //                    Console.WriteLine($"Unable to parse '{Adjective.Value}'");
+        //                }
+
+
+        //                //SelectedAdjectives = $"{Adjective.Text},{SelectedAdjectives}";
+        //                //SelectedAdjectiveIDs = $"{Adjective.Value},{SelectedAdjectiveIDs}";
+        //            }
+        //        }
+        //    }
+        //    else return Page();
+        //    //validation for when javascript is turned off on browser
+        //    //save selected items
+
+        //    //if (id == 0)
+
+        //    //SelectedAdjectives = SelectedAdjectives.TrimEnd(',');
+        //    //SelectedAdjectiveIDs = SelectedAdjectiveIDs.TrimEnd(',');
+        //    //add New ClientResponse
+        //    //foreach(var c in ClientObj.AdjectivesList)
+        //    //{
+        //    //    ClientResponseObj = new ClientResponse();
+        //    //    ClientResponseObj.Client = ClientObj.Client;
+        //    //    //c.Value is the adjective ID-
+        //    //    ClientResponseObj.Adjective = ;
+        //    //    _unitOfWork.ClientResponse.Add(ClientResponse);
+        //    //}
+
+
+
+
+
+        //    _unitOfWork.Commit();
+        //    return RedirectToPage("./Client");
+
+        //    //return Page();
+        //}
+
+
+
+
+        public IActionResult OnPost(string userId)
         {
             int id = 0;
             //validation for when javascript is turned off on browser
@@ -85,21 +179,10 @@ namespace JohariWindow.Pages.Clients
                         }
 
 
-                        //SelectedAdjectives = $"{Adjective.Text},{SelectedAdjectives}";
-                        //SelectedAdjectiveIDs = $"{Adjective.Value},{SelectedAdjectiveIDs}";
                     }
                 }
-            //SelectedAdjectives = SelectedAdjectives.TrimEnd(',');
-            //SelectedAdjectiveIDs = SelectedAdjectiveIDs.TrimEnd(',');
-            //add New ClientResponse
-            //foreach(var c in ClientObj.AdjectivesList)
-            //{
-            //    ClientResponseObj = new ClientResponse();
-            //    ClientResponseObj.Client = ClientObj.Client;
-            //    //c.Value is the adjective ID-
-            //    ClientResponseObj.Adjective = ;
-            //    _unitOfWork.ClientResponse.Add(ClientResponse);
-            //}
+            else
+
 
 
 

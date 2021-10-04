@@ -1,5 +1,5 @@
 ﻿@page
-@model JohariWindow.Pages.Clients.ClientModel
+@model JohariWindow.Pages.Clients.IndexModel
 
 @{
     ViewData["Title"] = "Client Home gage";
@@ -9,29 +9,8 @@
     <div class="container">
 
 
-        @*<div class="row">
-                <div class="col-3">
-                    <label asp-for="ApplicationUserId">User id</label>
-
-                </div>
-                <div class="col-9">
-                    <input asp-for="ApplicationUserId" type="text" value="@Model.ApplicationUserId" readonly />
-
-                </div>
-            </div>*@
-        <br />
-        @*<div asp-validation-summary="All" class="text-danger"></div>
-        <div asp-validation-summary="All" class="col-12 px-3" style="border-bottom: 1px solid #325d88">*@
-            <div class="form-group row">
-                <div class="col-3">
-                    <label asp-for="ApplicationUserId">User id</label>
-
-                </div>
-                <div class="col-9">
-                    <input asp-for="ApplicationUserId" type="text" value="@Model.ApplicationUserId" readonly name="userId"/>
-
-                </div>
-            </div>
+       
+            
             <br />
             <h3> Invite 4 friends</h3>
             <br />

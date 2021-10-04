@@ -123,6 +123,13 @@ namespace Infrastructure.Data
             return _dbContext.Set<T>().Find(id);
         }
 
+        public virtual T GetById(string id)
+        {
+            //connects to db and returns a set of T objects with id
+            return _dbContext.Set<T>().Find(id);
+        }
+
+
         public virtual IEnumerable<T> List()
         {
             return _dbContext.Set<T>().ToList().AsEnumerable();

@@ -1,0 +1,41 @@
+﻿@page
+@model JohariWindow.Pages.Friends.IndexModel
+@{
+}
+<form method="post" asp-action="Index" name="clientForm">
+
+    <div class="container">
+
+        <br />
+        <br />
+        <div class="form-group row">
+            <div class="col-3">
+                <label for="userId">User id</label>
+
+            </div>
+            <div class="col-9">
+                <input type="text" id="userId" name="userId" class="col-9" />
+
+            </div>
+        </div>
+        <br />
+
+        <br />
+
+
+
+        <br />
+        <div class="form-group row">
+            <div class="col-4">
+                <button type="submit" class="btn btn-primary form-control" >Find</button>
+
+            </div>
+        </div>
+    </div>
+
+
+
+</form>
+@section Scripts{
+    <script src="~/js/client.js"></script>
+}

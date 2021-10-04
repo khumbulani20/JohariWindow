@@ -30,8 +30,18 @@ namespace Infrastructure.Data
         private IGenericRepository<FriendResponse> _FriendResponse;
 
         private IGenericRepository<Adjective> _Adjective;
+        private IGenericRepository<ApplicationUser>_ApplicationUser;
 
-        
+        public IGenericRepository<ApplicationUser> ApplicationUser
+        {
+            get
+            {
+                if (_ApplicationUser == null) _ApplicationUser = new GenericRepository<ApplicationUser>(_dbContext);
+
+
+                return _ApplicationUser;
+            }
+        }
         public IGenericRepository<Client> Client
         {
             get

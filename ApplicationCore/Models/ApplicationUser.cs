@@ -10,10 +10,18 @@ namespace ApplicationCore.Models
 {
     public class ApplicationUser : IdentityUser
     {
+
         public string FirstName { get; set; }
         public string LastName { get; set; }
+
+     
+        public DateTime DOB { get; set; }
+ 
+        public string Gender { get; set; }
         [NotMapped]
         public string FullName { get { return FirstName + " " + LastName; } }
+       
+
     }
 
 }

@@ -11,6 +11,7 @@ namespace ApplicationCore.Interfaces
     {
         //get object by it's id
         T GetById(int id);
+        T GetById(string id);
 
         //uses link expression
         //bool tells you if there is anything is returned

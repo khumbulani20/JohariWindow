@@ -23,6 +23,8 @@ namespace ApplicationCore.Models
         public virtual Client Client { get; set; }
         [ForeignKey("FriendID")]
         public virtual Friend Friend { get; set; }
+
+       
     }
 
 

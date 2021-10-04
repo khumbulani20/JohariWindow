@@ -16,22 +16,22 @@ namespace Infrastructure.Data
             {
                 return; //DB has been seeded
             }
-            var clients = new List<Client>
-            {
+            //var clients = new List<Client>
+            //{
 
-                new Client{FirstName="John", LastName="Hopkins" ,DOB=DateTime.Now,Gender="Male"},
-                new Client{FirstName="Loraine", LastName="Hopkins" ,DOB=DateTime.Now,Gender="Female"},
-                new Client{FirstName="Drew", LastName="Hopkins" ,DOB=DateTime.Now,Gender="Male"},
-                new Client{FirstName="Judy", LastName="Hopkins" ,DOB=DateTime.Now,Gender="Female"},
-                new Client{FirstName="John", LastName="Hopkins" ,DOB=DateTime.Now,Gender="Male"},
-                new Client{FirstName="Andrew", LastName="Williams" ,DOB=DateTime.Now,Gender="Male"},
-                new Client{FirstName="Loraine", LastName="Williams" ,DOB=DateTime.Now,Gender="Female"},
-                new Client{FirstName="John", LastName="Williams" ,DOB=DateTime.Now,Gender="Male"},
-                new Client{FirstName="Judy", LastName="Williams" ,DOB=DateTime.Now,Gender="Female"},
-                new Client{FirstName="Sam", LastName="Williams" ,DOB=DateTime.Now,Gender="Male"}
+            //    new Client{FirstName="John", LastName="Hopkins" ,DOB=DateTime.Now,Gender="Male"},
+            //    new Client{FirstName="Loraine", LastName="Hopkins" ,DOB=DateTime.Now,Gender="Female"},
+            //    new Client{FirstName="Drew", LastName="Hopkins" ,DOB=DateTime.Now,Gender="Male"},
+            //    new Client{FirstName="Judy", LastName="Hopkins" ,DOB=DateTime.Now,Gender="Female"},
+            //    new Client{FirstName="John", LastName="Hopkins" ,DOB=DateTime.Now,Gender="Male"},
+            //    new Client{FirstName="Andrew", LastName="Williams" ,DOB=DateTime.Now,Gender="Male"},
+            //    new Client{FirstName="Loraine", LastName="Williams" ,DOB=DateTime.Now,Gender="Female"},
+            //    new Client{FirstName="John", LastName="Williams" ,DOB=DateTime.Now,Gender="Male"},
+            //    new Client{FirstName="Judy", LastName="Williams" ,DOB=DateTime.Now,Gender="Female"},
+            //    new Client{FirstName="Sam", LastName="Williams" ,DOB=DateTime.Now,Gender="Male"}
 
 
-            };
+            //};
             var adjectives = new List<Adjective>
             {
                new Adjective{AdjName="able",AdjDefinition="having the power, skill, means, or opportunity to do something",AdjType=1},
@@ -153,10 +153,10 @@ new Adjective{AdjName="humourless",AdjDefinition="not having or showing the abil
             {
                 dbContext.Adjectives.Add(f);
             }
-            foreach (Client f in clients)
-            {
-                dbContext.Clients.Add(f);
-            }
+            //foreach (Client f in clients)
+            //{
+            //    dbContext.Clients.Add(f);
+            //}
             dbContext.SaveChanges();
         }
     }

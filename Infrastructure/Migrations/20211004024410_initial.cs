@@ -41,6 +41,11 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DOB = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -70,7 +75,8 @@ namespace Infrastructure.Migrations
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DOB = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ASPNETUserID = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -81,14 +87,15 @@ namespace Infrastructure.Migrations
                 name: "Friends",
                 columns: table => new
                 {
-                    FreindID = table.Column<int>(type: "int", nullable: false)
+                    ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Relationship = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    HowLong = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    HowLong = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ASPNETUserID = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Friends", x => x.FreindID);
+                    table.PrimaryKey("PK_Friends", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -252,7 +259,7 @@ namespace Infrastructure.Migrations
                         name: "FK_FriendResponses_Friends_FriendID",
                         column: x => x.FriendID,
                         principalTable: "Friends",
-                        principalColumn: "FreindID",
+                        principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                 });
 

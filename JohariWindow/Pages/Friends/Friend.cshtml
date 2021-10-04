@@ -1,0 +1,64 @@
+﻿@page
+@model JohariWindow.Pages.Friends.FriendModel
+@{
+}
+
+<form method="post" asp-action="Friend" name="clientForm">
+    <h5>Evaluate friend</h5>
+    <div class="container">
+
+
+        <br /><br />
+        <div class="form-group row">
+             
+            <div class="col-3">
+                <label for="userid">User id</label>
+
+            </div>
+            <div class="col-9">
+                <input for="userid" type="text" class="col-9" name="userid" required/>
+
+            </div>
+        </div>
+        <br />
+
+        <div class="form-group row">
+            <div class="col-3">
+                <label for="relationship" >Relationship</label>
+
+            </div>
+            <div class="col-9">
+                <input id="relationship" type="text" class="col-9" name="relationship" required />
+
+            </div>
+        </div>
+        <br />
+
+        <div class="form-group row">
+            <div class="col-3">
+                <label for="howlong">Length of friendship </label>
+
+            </div>
+            <div class="col-9">
+                <input id="howlong" type="text" class="col-9" name="howlong" required/>
+
+            </div>
+        </div>
+        <br />
+
+
+        <br />
+        <div class="form-group row">
+            <div class="col-4">
+                <button type="submit" class="btn btn-primary form-control" id="evaluate">Submit</button>
+
+            </div>
+        </div>
+    </div>
+
+
+
+</form>
+@section Scripts{
+    <script src="~/js/client.js"></script>
+}

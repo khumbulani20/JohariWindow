@@ -5,7 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using ApplicationCore.Interfaces;
 using ApplicationCore.Models;
+using Infrastructure.Data;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -27,13 +29,15 @@ namespace JohariWindow.Areas.Identity.Pages.Account
         private readonly IEmailSender _emailSender;
         //added role manager
         private readonly RoleManager<IdentityRole> _roleManager;
-
+        private readonly IUnitOfWork _unitOfWork;
+        private Client ClientObj { get; set; }
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,// added role manager
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<IdentityRole> roleManager,IUnitOfWork unitOfWork
+            )
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -41,6 +45,8 @@ namespace JohariWindow.Areas.Identity.Pages.Account
             _emailSender = emailSender;
             // added role manager
             _roleManager = roleManager;
+            _unitOfWork = unitOfWork;
+             
         }
 
         [BindProperty]
@@ -49,7 +55,7 @@ namespace JohariWindow.Areas.Identity.Pages.Account
         public string ReturnUrl { get; set; }
 
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
-
+        
         public class InputModel
         {
             [Required]
@@ -74,8 +80,24 @@ namespace JohariWindow.Areas.Identity.Pages.Account
             public string FirstName { get; set; }
             [Required]
             public string LastName { get; set; }
-            [Required]
-            public string PhoneNumber { get; set; }
+            
+           public string PhoneNumber { get; set; }
+
+            ////added this after changing users to identity
+         
+            public DateTime DOB { get; set; }
+          
+             public string Gender { get; set; }
+
+            //for friend
+          
+            //public string Relationship { get; set; }
+         
+            // public string HowLong { get; set; }
+
+
+
+
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -88,22 +110,37 @@ namespace JohariWindow.Areas.Identity.Pages.Account
         {
             //retrieve the role from the form
             string role = Request.Form["rdUserRole"].ToString();
-            if (role == "") { role = SD.AdminRole; } //make the first login a manager)
+            if (role == "") { role = SD.AdminRole; }
+          else
+            {
+               
+                role = SD.ClientRole;
+                
+
+            }
+                //make the first login a manager)
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
                 //expand identityuser with applicationuser properties
+             
                 var user = new ApplicationUser
                 {
                     UserName = Input.Email,
                     Email = Input.Email,
                     FirstName = Input.FirstName,
                     LastName = Input.LastName,
-                    PhoneNumber = Input.PhoneNumber
+                    PhoneNumber = Input.PhoneNumber,
+                    DOB=Input.DOB,
+                    Gender=Input.Gender
+              
+
                 };
+
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
+             
                 //add the roles to the ASPNET Roles table if they do not exist yet
                 if (!await _roleManager.RoleExistsAsync(SD.AdminRole))
                 {
@@ -129,13 +166,26 @@ namespace JohariWindow.Areas.Identity.Pages.Account
                         {
                             if (role == SD.AdminRole)
                             {
+                              
                                 await _userManager.AddToRoleAsync(user, SD.AdminRole);
                             }
                             
                         }
                     }
                     _logger.LogInformation("User created a new account with password.");
+                    //add to client table
+                    ClientObj = new Client
+                    {
+                        ASPNETUserID = user.Id,
+                        DOB=Input.DOB,
+                        FirstName=Input.FirstName,
+                        LastName=Input.LastName,
+                        Gender=Input.Gender
 
+
+                    };
+                    _unitOfWork.Client.Add(ClientObj);
+                   
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(
