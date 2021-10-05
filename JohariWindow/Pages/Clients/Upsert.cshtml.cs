@@ -5,193 +5,100 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using ApplicationCore.Interfaces;
 using ApplicationCore.Models;
-using Johari.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace JohariWindow.Pages.Clients
 {
     public class UpsertModel : PageModel
     {
-        private readonly IUnitOfWork _unitOfWork;
+        //binds with what's in the web page and backend for validation 
         [BindProperty]
-        public IList<SelectListItem> Adjectives { get; set; }
-        [BindProperty]
-        public ClientVM ClientObj { get; set; }
-
-        //[BindProperty]
-        //public Client Client { get; set; }
+        public ClientResponse ClientResponse { get; set; }
 
         [BindProperty]
-        public ClientResponse ClientResponseObj { get; set; }
+        public FriendResponse FriendResponse { get; set; }
+        private readonly IUnitOfWork _unitofWork;
+        [BindProperty]
+        public ApplicationUser ApplicationUser { get; set; }
+        public UpsertModel(IUnitOfWork unitofWork) => _unitofWork = unitofWork;
 
-        public int Type { get; set; }
-
-        [TempData]
-        public string SelectedAdjectives { get; set; }
-        [TempData]
-        public string SelectedAdjectiveIDs { get; set; }
-
-        public UpsertModel(IUnitOfWork unitOfWork)
+        //? means you can either have the parameter or not
+        public IActionResult OnGet(string id)
         {
-            _unitOfWork = unitOfWork;
-
-        }
-        public void OnGet()
-        {
-            //check if user is client or not
-           // var claimsIdentity = (ClaimsIdentity)this.User.Identity;
-           // var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-           //string user= claim.Value;
-           // int clientId;
-           // if(user==id)
-           // {
-           //     //use id to get clientid from client table
-           //    Client temp= _unitOfWork.Client.Get(u=>u.ASPNETUserID==id);
-           //     clientId = temp.ID;
-           //     //check if there are responses
-           //     ClientResponse resp = _unitOfWork.ClientResponse.Get(u => u.ClientID == clientId);
-           //     Console.WriteLine(resp);
-           // }
-           // else
-           // {
-           //     //friend
-           // }
+            //check if user is client or friend
             
-            //int id = 1;
-            //read data from adjectives table
-            //var adjectives = _unitOfWork.Adjective.List();
-            List<Adjective> AdjectiveList = (List<Adjective>)_unitOfWork.Adjective.List();
-            foreach (Adjective a in AdjectiveList)
-                Console.WriteLine(a.AdjectiveID);
-            //create a positive and negative list
-            ClientObj = new ClientVM
+             var claimsIdentity = (ClaimsIdentity)this.User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+            if(claim!=null)
             {
-                Client = new Client(),
-                AdjectivesList = AdjectiveList.ToList<Adjective>().Select(f => new SelectListItem { Text = f.AdjName, Value = f.AdjectiveID.ToString() }).ToList<SelectListItem>(),
-                ClientResponse = new ClientResponse()
-                ,
-                Adjectives = AdjectiveList
+                string user = claim.Value;
+                if (user == id)
+                {
+                    //client
+                    //check if user has responses
+                    //use id to check database
+                    Client client = _unitofWork.Client.Get(u => u.ASPNETUserID == id);
+                    if (client != null)
+                    {
+                        ClientResponse = new ClientResponse();
+                        //edit category
+                        if (client.ClientID != 0)
+                        {
+
+                            ClientResponse = _unitofWork.ClientResponse.Get(u => u.ClientID == client.ClientID);
+                            if (ClientResponse == null) return NotFound();
+                        }
+                    }
 
 
-            };
+                }
+            }
+            else
+            {
+                //friend
+                
 
+            }
+           
+            
+
+
+            return Page();
         }
-        //public IActionResult OnPost(string userId)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return Page();
-        //    }
-        //    int id = 0;
-
-        //    //get client with specified id
-
-        //    if (userId != null)
-        //    {
-        //        Client tempClient = _unitOfWork.Client.Get(u => u.ASPNETUserID == userId);
-        //        //get client id
-        //        id = tempClient.ClientID;
-        //        foreach (SelectListItem Adjective in ClientObj.AdjectivesList)
-        //        {
-        //            if (Adjective.Selected)
-        //            {
-        //                //create a response
-        //                ClientResponse resp = new ClientResponse();
-        //                try
-        //                {
-        //                    resp.AdjectiveID = Int32.Parse(Adjective.Value);
-        //                    resp.ClientID = id;
-        //                    //save to db
-        //                    _unitOfWork.ClientResponse.Add(resp);
-
-        //                }
-        //                catch (FormatException)
-        //                {
-        //                    Console.WriteLine($"Unable to parse '{Adjective.Value}'");
-        //                }
-
-
-        //                //SelectedAdjectives = $"{Adjective.Text},{SelectedAdjectives}";
-        //                //SelectedAdjectiveIDs = $"{Adjective.Value},{SelectedAdjectiveIDs}";
-        //            }
-        //        }
-        //    }
-        //    else return Page();
-        //    //validation for when javascript is turned off on browser
-        //    //save selected items
-
-        //    //if (id == 0)
-
-        //    //SelectedAdjectives = SelectedAdjectives.TrimEnd(',');
-        //    //SelectedAdjectiveIDs = SelectedAdjectiveIDs.TrimEnd(',');
-        //    //add New ClientResponse
-        //    //foreach(var c in ClientObj.AdjectivesList)
-        //    //{
-        //    //    ClientResponseObj = new ClientResponse();
-        //    //    ClientResponseObj.Client = ClientObj.Client;
-        //    //    //c.Value is the adjective ID-
-        //    //    ClientResponseObj.Adjective = ;
-        //    //    _unitOfWork.ClientResponse.Add(ClientResponse);
-        //    //}
-
-
-
-
-
-        //    _unitOfWork.Commit();
-        //    return RedirectToPage("./Client");
-
-        //    //return Page();
-        //}
-
-
-
-
-        public IActionResult OnPost(string userId)
+        public IActionResult OnPost()
         {
-            int id = 0;
-            //validation for when javascript is turned off on browser
             if (!ModelState.IsValid)
             {
                 return Page();
             }
+            var claimsIdentity = (ClaimsIdentity)this.User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+            string user = claim.Value;
+            if (user == null)
+            {
+                FriendResponse = new FriendResponse();
+                //get submitted data
 
-            if (id == 0)
-                foreach (SelectListItem Adjective in ClientObj.AdjectivesList)
-                {
-                    if (Adjective.Selected)
-                    {
-                        //create a response
-                        ClientResponse resp = new ClientResponse();
-                        try
-                        {
-                            resp.AdjectiveID = Int32.Parse(Adjective.Value);
-                            resp.ClientID = 1;
-                            //save to db
-                            _unitOfWork.ClientResponse.Add(resp);
-
-                        }
-                        catch (FormatException)
-                        {
-                            Console.WriteLine($"Unable to parse '{Adjective.Value}'");
-                        }
-
-
-                    }
-                }
+                _unitofWork.FriendResponse.Add(FriendResponse);
+             
+            }
             else
+            {
+                //if new category
+                if (ClientResponse.ClientID == 0)
+                {
+                    _unitofWork.ClientResponse.Add(ClientResponse);
+                }
 
-
-
-
-
-
-            _unitOfWork.Commit();
-            return RedirectToPage("./Client");
-
-            //return Page();
+                else
+                {
+                    _unitofWork.ClientResponse.Update(ClientResponse);
+                }
+            }
+            _unitofWork.Commit();
+            return RedirectToPage("./Index");
         }
     }
 }

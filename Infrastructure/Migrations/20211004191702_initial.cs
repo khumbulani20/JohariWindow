@@ -87,7 +87,7 @@ namespace Infrastructure.Migrations
                 name: "Friends",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
+                    FriendID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Relationship = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     HowLong = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -95,7 +95,7 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Friends", x => x.ID);
+                    table.PrimaryKey("PK_Friends", x => x.FriendID);
                 });
 
             migrationBuilder.CreateTable(
@@ -259,7 +259,7 @@ namespace Infrastructure.Migrations
                         name: "FK_FriendResponses_Friends_FriendID",
                         column: x => x.FriendID,
                         principalTable: "Friends",
-                        principalColumn: "ID",
+                        principalColumn: "FriendID",
                         onDelete: ReferentialAction.Cascade);
                 });
 

@@ -24,13 +24,13 @@ namespace JohariWindow.Pages.Clients
 
 
 
-         
+
 
 
 
         List<EmailAddress> emails;
         [BindProperty]
-        public string EmailOne { get; set; } 
+        public string EmailOne { get; set; }
         [BindProperty]
         public string EmailTwo { get; set; }
         [BindProperty]
@@ -38,14 +38,14 @@ namespace JohariWindow.Pages.Clients
         [BindProperty]
         public string EmailFour { get; set; }
         private readonly IUnitOfWork _unitOfWork;
-        public IActionResult OnGet(   )
+        public IActionResult OnGet()
         {
 
             //get the applicationuserid from aspnetusers table
             var claimsIdentity = (ClaimsIdentity)this.User.Identity;
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
             ApplicationUserId = claim.Value;
-           
+
             //ClientObj = new Client();
             ////edit category
             //if (email !=null)
@@ -63,7 +63,7 @@ namespace JohariWindow.Pages.Clients
         //gets four emails and send to 
         public IActionResult OnPost()
         {
-          
+
             if (!ModelState.IsValid)
             {
                 return Page();
@@ -71,7 +71,7 @@ namespace JohariWindow.Pages.Clients
             //send emails
             emails = new List<EmailAddress>();
             //Console.WriteLine(EmailOne);
-           
+
             EmailOne = Request.Form["email1"];
             EmailTwo = Request.Form["email2"];
             EmailThree = Request.Form["email3"];
@@ -82,47 +82,47 @@ namespace JohariWindow.Pages.Clients
             //    Console.WriteLine(ApplicationUserId);
             //}
 
-            if (EmailOne !=null && EmailTwo!=null && EmailThree!=null && EmailFour!=null )
+            if (EmailOne != null && EmailTwo != null && EmailThree != null && EmailFour != null)
             {
                 Console.WriteLine(EmailOne);
                 Console.WriteLine(EmailOne);
-                emails.Add(new EmailAddress { Email=EmailOne});
+                emails.Add(new EmailAddress { Email = EmailOne });
                 emails.Add(new EmailAddress { Email = EmailTwo });
                 emails.Add(new EmailAddress { Email = EmailThree });
                 emails.Add(new EmailAddress { Email = EmailFour });
-                foreach(EmailAddress e in emails)
+                foreach (EmailAddress e in emails)
                 {
                     Console.WriteLine(e.Email);
                 }
                 string callbackUrl = "test urls";
                 string url = $"Please Evaluate your friend using this user id: {ApplicationUserId} <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.";
                 //send emails to friends
-               
-                _ = Execute(url,emails);
+
+                _ = Execute(url, emails);
             }
-           
+
             return RedirectToPage("./Upsert");
         }
-        public async Task Execute(string url,List<EmailAddress> tos)
+        public async Task Execute(string url, List<EmailAddress> tos)
         {
             AuthSenderOptions aso = new AuthSenderOptions();
             Environment.SetEnvironmentVariable("SENDGRID_API_KEY", aso.SendGridKey);
             var apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
             var client = new SendGridClient(apiKey);
-         
-           
+
+
             var from = new EmailAddress("joharibykn@gmail.com", "Admin email");
 
 
 
 
-            
+
             var subject = "Johari window friend evaluation request";
             string callbackUrl = "https://localhost:44376/Friends/Friend";
             var htmlContent = $"Click link to evaluate friend <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>Evaluate friend</a>. and enter the id : {ApplicationUserId}";
             //CreateSingleEmail(EmailAddress from, EmailAddress to, string subject, string plainTextContent, string htmlContent);
-            var msg=  MailHelper.CreateSingleEmailToMultipleRecipients(from, tos, subject, url, htmlContent);
-            
+            var msg = MailHelper.CreateSingleEmailToMultipleRecipients(from, tos, subject, url, htmlContent);
+
             var response = await client.SendEmailAsync(msg);
         }
     }
