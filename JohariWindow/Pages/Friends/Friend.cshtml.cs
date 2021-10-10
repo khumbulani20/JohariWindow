@@ -24,20 +24,7 @@ namespace JohariWindow.Pages.Friends
         private readonly IUnitOfWork _unitofWork;
         public FriendModel(IUnitOfWork unitofWork) => _unitofWork = unitofWork;
 
-        //public IActionResult OnGet(int? id)
-        //{
-        //    //FriendObj = new Friend();
-        //    ////edit category
-        //    //if (id != 0)
-        //    //{
-        //    //    //get category with specified id
-        //    //    FriendObj = _unitofWork.Friend.Get(u => u.FreindID == id);
-        //    //    if (FriendObj == null) return NotFound();
-        //    //}
-
-
-        //    return Page();
-        //}
+      
         public IActionResult OnPost()
         {
             clientId = Request.Form["userId"];
@@ -73,7 +60,7 @@ namespace JohariWindow.Pages.Friends
 
             _unitofWork.Commit();
             //open friend response page
-            return RedirectToPage("Response",new { clientId });
+            return RedirectToPage("../Clients/Responses", new { id=clientId });
             
         }
     }

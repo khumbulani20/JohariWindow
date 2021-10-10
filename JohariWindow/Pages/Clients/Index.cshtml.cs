@@ -18,16 +18,13 @@ namespace JohariWindow.Pages.Clients
 {
     public class IndexModel : PageModel
     {
+        private IUnitOfWork _unitOfWork;
+        public IndexModel(IUnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
+         
         public Client ClientObj { get; set; }
         [BindProperty]
         public string ApplicationUserId { get; set; }
-
-
-
-
-
-
-
+        
         List<EmailAddress> emails;
         [BindProperty]
         public string EmailOne { get; set; }
@@ -37,21 +34,36 @@ namespace JohariWindow.Pages.Clients
         public string EmailThree { get; set; }
         [BindProperty]
         public string EmailFour { get; set; }
-       
+        private string userName;
         public IActionResult OnGet()
         {
 
             //get the applicationuserid from aspnetusers table
             var claimsIdentity = (ClaimsIdentity)this.User.Identity;
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-            ApplicationUserId = claim.Value;
+            //get first and last name
+            
+
+            if (claim==null)
+            {
+                return RedirectToPage();
+            }
+            else
+            {
+                ApplicationUserId = claim.Value;
+                Client cl = _unitOfWork.Client.Get(u => u.ASPNETUserID == ApplicationUserId);
+                int clientID = cl.ClientID;
+                //get first and last name
+                userName = cl.FirstName + " " + cl.LastName;
+            }
+            
 
           
 
             return Page();
         }
 
-        //gets four emails and send to 
+        //gets four emails and send to friends
         public IActionResult OnPost()
         {
 
@@ -59,7 +71,7 @@ namespace JohariWindow.Pages.Clients
             {
                 return Page();
             }
-            //send emails
+           
             emails = new List<EmailAddress>();
         
 
@@ -78,17 +90,18 @@ namespace JohariWindow.Pages.Clients
                 emails.Add(new EmailAddress { Email = EmailTwo });
                 emails.Add(new EmailAddress { Email = EmailThree });
                 emails.Add(new EmailAddress { Email = EmailFour });
+                //needs first and last name
                
-                string callbackUrl = "https://johariwindowndlovu.azurewebsites.net";
-                string url = $"Please Evaluate your friend using this user id: {ApplicationUserId} <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.";
+                string callbackUrl = "https://localhost:44376/Friends/Friend";
+                string url = $"Please Evaluate your friend {userName} using this user id: {ApplicationUserId} <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.";
                 //send emails to friends
 
-                _ = Execute(url, emails);
+                _ = Execute(url, emails, userName);
             }
 
             return RedirectToPage("./Upsert");
         }
-        public async Task Execute(string url, List<EmailAddress> tos)
+        public async Task Execute(string url, List<EmailAddress> tos, string name)
         {
             AuthSenderOptions aso = new AuthSenderOptions();
             Environment.SetEnvironmentVariable("SENDGRID_API_KEY", aso.SendGridKey);
@@ -98,13 +111,11 @@ namespace JohariWindow.Pages.Clients
 
             var from = new EmailAddress("joharibykn@gmail.com", "Admin email");
 
-
-
-
-
-            var subject = "Johari window friend evaluation request";
-            string callbackUrl = "https://johariwindowndlovu.azurewebsites.net/Friends/Friend";
-            var htmlContent = $"Click link to evaluate friend <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>Evaluate friend</a>. and enter the id : {ApplicationUserId}";
+            var subject = "Johari window friend evaluation request for  "+ name;
+            //string callbackUrl = "https://johariwindowndlovu.azurewebsites.net/Friends/Friend";
+            string callbackUrl = "https://localhost:44376/Friends/Friend";
+            Console.WriteLine(userName);
+            var htmlContent = $"Click link to   <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>Evaluate </a>  {name} and enter the id : {ApplicationUserId}";
             //CreateSingleEmail(EmailAddress from, EmailAddress to, string subject, string plainTextContent, string htmlContent);
             var msg = MailHelper.CreateSingleEmailToMultipleRecipients(from, tos, subject, url, htmlContent);
 

@@ -14,6 +14,11 @@ namespace JohariWindow.Pages.Clients
 {
     public class Responses : PageModel
     {
+       [BindProperty]
+        public string ClientId { get; set; }  
+
+
+        public  string userName;
         private readonly IUnitOfWork _unitOfWork;
         [BindProperty]
         public IList<SelectListItem> Adjectives { get; set; }
@@ -21,18 +26,14 @@ namespace JohariWindow.Pages.Clients
         public ClientVM ClientObj { get; set; }
 
         //[BindProperty]
-        //public Client Client { get; set; }
+        public Client Client { get; set; }
 
-        [BindProperty]
-        public ClientResponse ClientResponseObj { get; set; }
+        //[BindProperty]
+        //public ClientResponse ClientResponseObj { get; set; }
 
         public int Type { get; set; }
 
-        [TempData]
-        public string SelectedAdjectives { get; set; }
-        [TempData]
-        public string SelectedAdjectiveIDs { get; set; }
-
+       
         public Responses(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
@@ -41,13 +42,13 @@ namespace JohariWindow.Pages.Clients
         public void OnGet(string id)
         {
 
-            Console.WriteLine(id);
-            //check if user is client or not
-            // var claimsIdentity = (ClaimsIdentity)this.User.Identity;
-            // var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-            //string user= claim.Value;
-         //  string ix= Request.Form["userid"];
-            //var adjectives = _unitOfWork.Adjective.List();
+
+            ClientId = id;
+            if (id!=null)
+            {
+               Client= _unitOfWork.Client.Get(u => u.ASPNETUserID == id);
+            }
+           
             List<Adjective> AdjectiveList = (List<Adjective>)_unitOfWork.Adjective.List();
             
             //create a positive and negative list
@@ -68,9 +69,15 @@ namespace JohariWindow.Pages.Clients
 
 
 
-        public IActionResult OnPost()
+        public IActionResult OnPost(string clientId)
         {
+           //string uId=Request.Form["clientId"];
 
+            //for (int i = 0; i < 100; i++)
+            //{
+            //    Console.WriteLine(uId);
+            //}
+             
             //validation for when javascript is turned off on browser
             if (!ModelState.IsValid)
             {
@@ -115,10 +122,7 @@ namespace JohariWindow.Pages.Clients
                                 //get client response from list and update
                                 list.ElementAt(count).AdjectiveID = Int32.Parse(Adjective.Value);
                                 list.ElementAt(count).ClientID = client.ClientID;
-                                //resp.AdjectiveID = Int32.Parse(Adjective.Value);
-                                //resp.ResponseID = ids[count];
-                                //resp.ClientID = client.ClientID;
-
+                               
                                 //check for adding more than the ones in db
                                 //save to db
                                 _unitOfWork.ClientResponse.Update(list.ElementAt(count));
@@ -140,8 +144,8 @@ namespace JohariWindow.Pages.Clients
 
                 }
                 else
-                {//add new client responses
-
+                {
+                    //add new client responses
                     string idss = Request.Form["clientid"];
 
                     foreach (SelectListItem Adjective in ClientObj.AdjectivesList)
@@ -176,41 +180,47 @@ namespace JohariWindow.Pages.Clients
 
             else
             {
-                //friend
-                //create a friend response and save
-                //get client id using application user id
-                string cliId = Request.Form["userid"];
+                //friend responses
 
-                Client cl = _unitOfWork.Client.Get(u => u.ASPNETUserID == cliId);
-                int clID = cl.ClientID;
-                foreach (SelectListItem Adjective in ClientObj.AdjectivesList)
+                if (clientId != null)
                 {
-                    if (Adjective.Selected)
+                    Client cl = _unitOfWork.Client.Get(u => u.ASPNETUserID == clientId);
+                    int clID = cl.ClientID;
+                    //get first and last name
+                    userName = cl.FirstName + " " + cl.LastName;
+                    Console.WriteLine("the username is :" + userName);
+                    foreach (SelectListItem Adjective in ClientObj.AdjectivesList)
                     {
-                        //create a response
-                        FriendResponse resp = new FriendResponse();
-                        try
+                        if (Adjective.Selected)
                         {
+                            //create a response
+                            FriendResponse resp = new FriendResponse();
+                            try
+                            {
 
-                            resp.AdjectiveID = Int32.Parse(Adjective.Value);
-                            resp.ClientID = clID;
+                                resp.AdjectiveID = Int32.Parse(Adjective.Value);
+                                resp.ClientID = Client.ClientID;
 
-                            _unitOfWork.FriendResponse.Add(resp);
+                                _unitOfWork.FriendResponse.Add(resp);
+
+                            }
+                            catch (FormatException)
+                            {
+                                Console.WriteLine($"Unable to parse '{Adjective.Value}'");
+                            }
+
 
                         }
-                        catch (FormatException)
-                        {
-                            Console.WriteLine($"Unable to parse '{Adjective.Value}'");
-                        }
-
-
                     }
+                    _unitOfWork.Commit();
+                    return RedirectToPage("./ResponseConfirmation", new { name = userName });
                 }
 
+                
             }
 
-
             _unitOfWork.Commit();
+           
             return RedirectToPage("./Index");
             //return Page();
         }

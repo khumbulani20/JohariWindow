@@ -36,13 +36,7 @@
 
                             </li>
                         }
-                        @if (User.IsInRole(SD.FriendRole)|| User.IsInRole(SD.AdminRole))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Friends/Index">Friend</a>
-
-                            </li>
-                        }
+                       
                         </ul>
                     <partial name="_LoginPartial" />
                 </div>

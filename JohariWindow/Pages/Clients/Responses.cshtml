@@ -5,118 +5,132 @@
 
 <form method="post">
     <h2>Select 7 positive attributes</h2>
-
+    <input type="hidden"   value="@Model.ClientId"  asp-for="@Model.ClientId" />
     <table class="table table-borderless" id="pos">
         @{ var j = 0;
-
-            for (int i = 0; i < Model.ClientObj.AdjectivesList.Count; i++)
+            if (Model.ClientObj != null)
             {
-
-
-                if (j % 5 == 0)
+                if (Model.ClientObj.AdjectivesList.Count > 0)
                 {
-                    //create a row
-                    <tr class="row"></tr>
+                    for (int i = 0; i < Model.ClientObj.AdjectivesList.Count; i++)
+                    {
+
+
+                        if (j % 5 == 0)
+                        {
+                            //create a row
+                            <tr class="row"></tr>
+
+                        }
+                        int adjType = 2;
+                        string temp = Model.ClientObj.AdjectivesList[i].Value;
+                        try
+                        {
+
+                            int id = Int32.Parse(temp);
+                            //find type of Adjective
+                            adjType = Model.ClientObj.Adjectives.Find(f => f.AdjectiveID == id).AdjType;
+
+
+
+                        }
+                        catch (FormatException)
+                        {
+                            Console.WriteLine($"Unable to parse '{temp}'");
+                        }
+
+
+
+
+
+
+
+                        @if (adjType == 0)
+                        {
+
+                            j += 1;
+
+                            <td>
+                                <input asp-for="@Model.ClientObj.AdjectivesList[i].Value" type="hidden" />
+                                <input asp-for="@Model.ClientObj.AdjectivesList[i].Text" type="hidden" />
+                                <input asp-for="@Model.ClientObj.AdjectivesList[i].Selected" class="positiveCBox" onclick='chkcontrol(1)' />
+                                @Model.ClientObj.AdjectivesList[i].Text
+                            </td>
+
+                        }
+
+
+
+
+                    }
+
 
                 }
-                int adjType = 2;
-                string temp = Model.ClientObj.AdjectivesList[i].Value;
-                try
-                {
-
-                    int id = Int32.Parse(temp);
-                    //find type of Adjective
-                    adjType = Model.ClientObj.Adjectives.Find(f => f.AdjectiveID == id).AdjType;
-
-
-                }
-                catch (FormatException)
-                {
-                    Console.WriteLine($"Unable to parse '{temp}'");
-                }
-
-
-
-
-
-
-
-                @if (adjType == 0)
-                {
-
-                    j += 1;
-
-                    <td>
-                        <input asp-for="@Model.ClientObj.AdjectivesList[i].Value" type="hidden" />
-                        <input asp-for="@Model.ClientObj.AdjectivesList[i].Text" type="hidden" />
-                        <input asp-for="@Model.ClientObj.AdjectivesList[i].Selected" class="positiveCBox" onclick='chkcontrol(1)' />
-                        @Model.ClientObj.AdjectivesList[i].Text
-                    </td>
-
-                }
-
-
-
 
             }
-
         }
     </table>
     <br />
     <h2>Select 12 positive attributes</h2>
     <table class="table table-borderless" id="neg">
         @{ var k = 0;
-
-            for (int i = 0; i < Model.ClientObj.AdjectivesList.Count; i++)
+            if (Model.ClientObj != null)
             {
-
-
-                if (k % 5 == 0)
+                if (Model.ClientObj.AdjectivesList.Count > 0)
                 {
-                    //create a row
-                    <tr class="row"></tr>
+                    for (int i = 0; i < Model.ClientObj.AdjectivesList.Count; i++)
+                    {
 
+
+                        if (k % 5 == 0)
+                        {
+                            //create a row
+                            <tr class="row"></tr>
+
+                        }
+                        int adjType = 2;
+                        string temp = Model.ClientObj.AdjectivesList[i].Value;
+                        try
+                        {
+
+                            int id = Int32.Parse(temp);
+                            //find type of Adjective
+                            adjType = Model.ClientObj.Adjectives.Find(f => f.AdjectiveID == id).AdjType;
+
+
+                        }
+                        catch (FormatException)
+                        {
+                            Console.WriteLine($"Unable to parse '{temp}'");
+                        }
+
+
+
+
+
+
+
+                        @if (adjType == 1)
+                        {
+
+                            k += 1;
+
+                            <td>
+                                <input asp-for="@Model.ClientObj.AdjectivesList[i].Value" type="hidden" />
+                                <input asp-for="@Model.ClientObj.AdjectivesList[i].Text" type="hidden" />
+                                <input asp-for="@Model.ClientObj.AdjectivesList[i].Selected" class="negativeCBox" />
+                                @Model.ClientObj.AdjectivesList[i].Text
+                            </td>
+
+                        }
+
+
+
+
+                    }
                 }
-                int adjType = 2;
-                string temp = Model.ClientObj.AdjectivesList[i].Value;
-                try
-                {
-
-                    int id = Int32.Parse(temp);
-                    //find type of Adjective
-                    adjType = Model.ClientObj.Adjectives.Find(f => f.AdjectiveID == id).AdjType;
-
-
-                }
-                catch (FormatException)
-                {
-                    Console.WriteLine($"Unable to parse '{temp}'");
-                }
-
-
-
-
-
-
-
-                @if (adjType == 1)
-                {
-
-                    k += 1;
-
-                    <td>
-                        <input asp-for="@Model.ClientObj.AdjectivesList[i].Value" type="hidden" />
-                        <input asp-for="@Model.ClientObj.AdjectivesList[i].Text" type="hidden" />
-                        <input asp-for="@Model.ClientObj.AdjectivesList[i].Selected" class="negativeCBox" />
-                        @Model.ClientObj.AdjectivesList[i].Text
-                    </td>
-
-                }
-
-
-
-
             }
+
 
         }
     </table>
