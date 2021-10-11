@@ -71,14 +71,8 @@ namespace JohariWindow.Pages.Clients
 
         public IActionResult OnPost(string clientId)
         {
-           //string uId=Request.Form["clientId"];
-
-            //for (int i = 0; i < 100; i++)
-            //{
-            //    Console.WriteLine(uId);
-            //}
-             
-            //validation for when javascript is turned off on browser
+           
+           
             if (!ModelState.IsValid)
             {
                 return Page();
@@ -87,13 +81,10 @@ namespace JohariWindow.Pages.Clients
             var claimsIdentity = (ClaimsIdentity)this.User.Identity;
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
             if (claim != null)
-            {//client
+            {
+                //client
                 string user = claim.Value;
 
-                //client
-                //check if he has responses
-                //user is the user id
-                //use it to get responses
                 Client client = _unitOfWork.Client.Get(u => u.ASPNETUserID == user);
                 // ClientResponse respo = _unitOfWork.ClientResponse.Get(u=>u.ClientID==client.ClientID);
 
@@ -102,13 +93,19 @@ namespace JohariWindow.Pages.Clients
                 // _unitOfWork.ClientResponse.Update(ClientResponse);
                 if (list.Count() > 0)//he has responses update
                 {
+                    for (int i = 0; i < 100; i++)
+                    {
+                        Console.WriteLine(list.Count());
+                    }
+                   
                     List<int> ids = new List<int>();
                     //get the ids and update
+                  
                     foreach (ClientResponse c in list)
                     {
                         ids.Add(c.ResponseID);
                     }
-
+                    //check if user has 12 responses
                     int count = 0;
                     foreach (SelectListItem Adjective in ClientObj.AdjectivesList)
                     {
@@ -222,7 +219,7 @@ namespace JohariWindow.Pages.Clients
             _unitOfWork.Commit();
            
             return RedirectToPage("./Index");
-            //return Page();
+        
         }
     }
 }

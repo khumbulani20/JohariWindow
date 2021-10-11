@@ -1,0 +1,62 @@
+check if client has four friend responses
+check if the user has already submitted a response
+friend should create account and be able to view responses he submitted
+
+
+select 7 negative and 12 positive attributes
+
+7) Admin can run a Johari Window on any ClientID (Selecting from a searchable list of First, Last Names vs. having to know the actual Client Id).
+
+Outputting the Jahori window requires you to perform 4 separate queries for each quadrant.
+
+Here are the 4 raw SQL queries I came up with.  I'm pretty sure they are correct, but they should still be validated against your own data to see if you're getting the right results. Once you have the results you just need write the queries in C# (LINQ) and bind the results to the HTML.
+
+
+Select AdjName, Count(AdjName)
+FROM Adjective a
+LEFT JOIN ClientResponse cr
+ON cr.adjectiveID = a.id
+LEFT JOIN FriendResponse fr
+ON cr.AdjectiveId = fr.AdjectiveId
+WHERE cr.ClientID like 'ClientIdstring'
+AND fr.AdjectiveId IS NULL
+GROUP BY AdjName
+
+
+--Hidden (bottom left corner).  Adjectives that are only on client's list and not on any of the friend’s lists (Count = 1) 
+Select AdjName, Count(AdjName)
+FROM Adjective a
+LEFT JOIN ClientResponse cr
+ON cr.adjectiveID = a.id
+LEFT JOIN FriendResponse fr
+ON cr.AdjectiveId = fr.AdjectiveId
+WHERE cr.ClientID like 'ClientIdstring'
+AND fr.AdjectiveId IS NOT NULL
+GROUP BY AdjName
+
+--Blind (upper right corner). Words that are only on your family's and friend's list but not on your own (Count > 1 AND ClientID is null) 
+Select AdjName, Count(AdjName)
+FROM Adjective a
+LEFT JOIN FriendResponse fr
+ON fr.adjectiveID = a.id
+LEFT JOIN ClientResponse cr
+ON cr.AdjectiveId = fr.AdjectiveId
+WHERE fr.ClientID like 'ClientIdstring'
+AND cr.AdjectiveId IS NULL
+GROUP BY AdjName
+
+--Unknown: (bottom right corner). "UNSHARED WORDS" (Count = 0)
+Select AdjName, Count(AdjName)
+FROM Adjective a
+LEFT JOIN ClientResponse cr
+ON cr.adjectiveID = a.id
+LEFT JOIN FriendResponse fr
+ON a.Id = fr.AdjectiveId
+WHERE cr.ClientID like 'ClientIdstring'
+AND a.Id IS NOT NULL 
+GROUP BY AdjName
+
+Here's some starting points to formulate outer join LINQ queries in C#
+https://docs.microsoft.com/en-us/dotnet/csharp/linq/perform-left-outer-joins
+https://www.c-sharpcorner.com/UploadFile/ff2f08/sql-join-in-linq-linq-to-entity-linq-to-sql/
+https://dotnettutorials.net/lesson/left-outer-join-in-linq/
