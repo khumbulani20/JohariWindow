@@ -113,7 +113,7 @@ namespace JohariWindow.Pages.Clients
 
             var subject = "Johari window friend evaluation request for  "+ name;
             //string callbackUrl = "https://johariwindowndlovu.azurewebsites.net/Friends/Friend";
-            string callbackUrl = "https://localhost:44376/Friends/Friend";
+            string callbackUrl = "https://localhost:44376/Identity/Account/Register";
             Console.WriteLine(userName);
             var htmlContent = $"Click link to   <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>Evaluate </a>  {name} and enter the id : {ApplicationUserId}";
             //CreateSingleEmail(EmailAddress from, EmailAddress to, string subject, string plainTextContent, string htmlContent);

@@ -22,11 +22,24 @@ namespace JohariWindow.Pages.Friends
         public  string relationship;
         public string clientId;
         private readonly IUnitOfWork _unitofWork;
+        public string friendId;
         public FriendModel(IUnitOfWork unitofWork) => _unitofWork = unitofWork;
 
-      
-        public IActionResult OnPost()
+        public IActionResult OnGet(string id)
         {
+            if (id!=null)
+            {
+                friendId = id;
+            }
+            return Page();
+        }
+        public IActionResult OnPost(string id)
+        {
+
+            for (int i = 0; i < 100; i++)
+            {
+                Console.WriteLine(id);
+            }
             clientId = Request.Form["userId"];
             howlong = Request.Form["howlong"];
             relationship = Request.Form["relationship"];
@@ -45,20 +58,31 @@ namespace JohariWindow.Pages.Friends
 
                 return Page();
             }
-            Friend fr = new Friend
+            if(id!=null)
             {
-                ASPNETUserID = clientId,
-                HowLong = howlong,
-                Relationship = relationship
+                Friend friend = _unitofWork.Friend.Get(f => f.ASPNETUserID == id);
+                friend.HowLong = howlong;
+                friend.Relationship = relationship;
+                //Friend fr = new Friend
+                //{
+                //    FriendID = friend.FriendID,
+                //    ASPNETUserID = id,
+                //    HowLong = howlong,
+                //    Relationship = relationship
 
 
-            };
+                //};
+                Console.WriteLine("user id is " + id);
+                //find user with this id
+               
+                _unitofWork.Friend.Update(friend);
+                _unitofWork.Commit();
+            }
+           
 
-            _unitofWork.Friend.Add(fr);
 
 
-
-            _unitofWork.Commit();
+            
             //open friend response page
             return RedirectToPage("../Clients/Responses", new { id=clientId });
             

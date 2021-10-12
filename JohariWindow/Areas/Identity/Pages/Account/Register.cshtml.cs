@@ -31,6 +31,9 @@ namespace JohariWindow.Areas.Identity.Pages.Account
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IUnitOfWork _unitOfWork;
         private Client ClientObj { get; set; }
+
+        private Friend FriendObj { get; set; }
+
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
@@ -55,7 +58,9 @@ namespace JohariWindow.Areas.Identity.Pages.Account
         public string ReturnUrl { get; set; }
 
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
-        
+        [BindProperty]
+        public List<string> Roles { get; set; }
+       
         public class InputModel
         {
             [Required]
@@ -89,21 +94,14 @@ namespace JohariWindow.Areas.Identity.Pages.Account
           
              public string Gender { get; set; }
 
-            //for friend
-          
-            //public string Relationship { get; set; }
-         
-            // public string HowLong { get; set; }
-
-
-
-
         }
-
+        public int userCount;
         public async Task OnGetAsync(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
+            userCount = _unitOfWork.ApplicationUser.List().Count();
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+           
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
@@ -111,13 +109,7 @@ namespace JohariWindow.Areas.Identity.Pages.Account
             //retrieve the role from the form
             string role = Request.Form["rdUserRole"].ToString();
             if (role == "") { role = SD.AdminRole; }
-          else
-            {
-               
-                role = SD.ClientRole;
-                
-
-            }
+          
                 //make the first login a manager)
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
@@ -174,17 +166,36 @@ namespace JohariWindow.Areas.Identity.Pages.Account
                     }
                     _logger.LogInformation("User created a new account with password.");
                     //add to client table
-                    ClientObj = new Client
+                    if (role==SD.ClientRole)
                     {
-                        ASPNETUserID = user.Id,
-                        DOB=Input.DOB,
-                        FirstName=Input.FirstName,
-                        LastName=Input.LastName,
-                        Gender=Input.Gender
+                        ClientObj = new Client
+                        {
+                            ASPNETUserID = user.Id,
+                            DOB = Input.DOB,
+                            FirstName = Input.FirstName,
+                            LastName = Input.LastName,
+                            Gender = Input.Gender
 
 
-                    };
-                    _unitOfWork.Client.Add(ClientObj);
+                        };
+                        _unitOfWork.Client.Add(ClientObj);
+                    }
+                   
+                    if(role==SD.FriendRole)
+                    {
+                        FriendObj = new Friend
+                        {
+                            ASPNETUserID = user.Id,
+                          Relationship="",
+                          HowLong="",
+                           
+
+
+                        };
+                        _unitOfWork.Friend.Add(FriendObj);
+                        Console.WriteLine(" user created " + user.Id);
+                    }
+                    
                    
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
