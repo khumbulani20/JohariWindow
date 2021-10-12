@@ -2,6 +2,7 @@ check if client has four friend responses
 check if the user has already submitted a response
 friend should create account and be able to view responses he submitted
 
+invites successfull message 
 
 select 7 negative and 12 positive attributes
 

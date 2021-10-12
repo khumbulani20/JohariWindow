@@ -1,0 +1,47 @@
+﻿@page
+@model JohariWindow.Pages.Admin.IndexModel
+@{
+}
+<!-- needs all clients-->
+
+@{
+    ViewData["Title"] = "Clients";
+}
+
+
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<div class="border backgroundWhite container">
+    <div class="row">
+        <div class="col-6">
+            <h2 class="text-primary">Client List</h2>
+
+        </div>
+       
+    </div>
+
+
+
+    <br /><br />
+    <!-- add id  -->
+    <table id="DT_load" class="table table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>
+                    First name
+                </th>
+                <th>
+                    Last name
+                </th>
+
+                <th></th>
+            </tr>
+        </thead>
+
+    </table>
+</div>
+@section Scripts{
+    <script src="~/js/johari.js"></script>
+}

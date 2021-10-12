@@ -9,6 +9,8 @@
     <title>@ViewData["Title"] - JohariWindow</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/lib/fontawesome/css/all.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.2/css/jquery.dataTables.min.css" />
 </head>
 <body>
     <header>
@@ -35,9 +37,13 @@
                                 <a class="nav-link text-dark" asp-area="" asp-page="/Clients/Responses">Responses</a>
 
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Admin/Index">Clients</a>
+
+                            </li>
                         }
-                       
-                        </ul>
+
+                    </ul>
                     <partial name="_LoginPartial" />
                 </div>
             </div>
@@ -58,7 +64,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-
+    <script src="https://cdn.datatables.net/1.11.2/js/jquery.dataTables.min.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

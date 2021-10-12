@@ -1,0 +1,49 @@
+﻿@page
+@model JohariWindow.Pages.Clients.ClientModel
+@{
+}
+
+@{
+    ViewData["Title"] = "Clients";
+}
+
+
+
+
+<div class="border backgroundWhite container">
+    <div class="row">
+        <div class="col-6">
+            <h2 class="text-primary">Client List</h2>
+
+        </div>
+        <div class="col-6 text-right">
+            <a asp-page="Johari" asp-route-id="0" class="btn btn-primary">
+                <i class="fas fa-plus"></i>&nbsp;Create New
+            </a>
+        </div>
+
+    </div>
+
+
+
+    <br /><br />
+    <!-- add id  -->
+    <table id="DT_load" class="table table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>
+                    First name
+                </th>
+                <th>
+                    Last name
+                </th>
+
+                <th></th>
+            </tr>
+        </thead>
+
+    </table>
+</div>
+@section Scripts{
+    <script src="~/js/johari.js"></script>
+}
