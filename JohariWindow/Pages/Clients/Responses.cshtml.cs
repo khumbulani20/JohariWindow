@@ -179,7 +179,7 @@ namespace JohariWindow.Pages.Clients
             }
             if (friend!=null)//user is a friend
                 {
-                  
+                  //check if friend already submitted responses
                         //friend responses
 
                         if (clientId != null)
