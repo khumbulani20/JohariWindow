@@ -12,8 +12,9 @@ function loadList() {
             "datatype": "json"
         },
         "columns": [
-            { data: "firstName", width: "40%" },
-            { data: "lastName", width: "40%" },
+            { data: "firstName", width: "35%" },
+            { data: "lastName", width: "35%" },
+            
             
             {
                 data: "id", width: "30%",
@@ -23,7 +24,7 @@ function loadList() {
                             <a href="/Admin/Johari?id=${data}"
                             class ="btn btn-success text-white style="cursor:pointer; width=100px;"> <i class="far fa-edit"></i>Run Johari</a>
 
-                            <a onClick=Delete('/api/client/'+${data})
+                          <a onClick=Delete('/api/client/'+${data})
                             class ="btn btn-danger text-white style="cursor:pointer; width=100px;"> <i class="far fa-trash-alt"></i>Delete</a>
 
                     </div>`;

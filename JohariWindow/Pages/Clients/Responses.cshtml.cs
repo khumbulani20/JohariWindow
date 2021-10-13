@@ -90,7 +90,7 @@ namespace JohariWindow.Pages.Clients
                 {
 
                     //gets list of all responses
-                    IEnumerable<ClientResponse> list = _unitOfWork.ClientResponse.List(u => u.ClientID == client.ClientID);
+                    IEnumerable<ClientResponse> list = _unitOfWork.ClientResponse.List(u => u.ClientID == client.Id);
                     // _unitOfWork.ClientResponse.Update(ClientResponse);
                     if (list.Count() > 0)//he has responses update
                     {
@@ -119,7 +119,7 @@ namespace JohariWindow.Pages.Clients
 
                                     //get client response from list and update
                                     list.ElementAt(count).AdjectiveID = Int32.Parse(Adjective.Value);
-                                    list.ElementAt(count).ClientID = client.ClientID;
+                                    list.ElementAt(count).ClientID = client.Id;
 
                                     //check for adding more than the ones in db
                                     //save to db
@@ -156,7 +156,7 @@ namespace JohariWindow.Pages.Clients
                                 {
                                     resp.AdjectiveID = Int32.Parse(Adjective.Value);
 
-                                    resp.ClientID = client.ClientID;
+                                    resp.ClientID = client.Id;
                                     //save to db
                                     _unitOfWork.ClientResponse.Add(resp);
 
@@ -185,7 +185,7 @@ namespace JohariWindow.Pages.Clients
                         if (clientId != null)
                         {
                             Client cl = _unitOfWork.Client.Get(u => u.ASPNETUserID == clientId);
-                            int clID = cl.ClientID;
+                            int clID = cl.Id;
                             //get first and last name
                             userName = cl.FirstName + " " + cl.LastName;
                             Console.WriteLine("the username is :" + userName);

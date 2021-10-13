@@ -24,7 +24,7 @@ namespace JohariWindow.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var objFromDb = _unitOfWork.Client.Get(c => c.ClientID == id);
+            var objFromDb = _unitOfWork.Client.Get(c => c.Id == id);
             if (objFromDb == null)
             {
                 return Json(new { success = false, message = "Error while deleting" });

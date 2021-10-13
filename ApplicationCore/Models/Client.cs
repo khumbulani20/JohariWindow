@@ -11,7 +11,7 @@ namespace ApplicationCore.Models
     {
       [Key]
         [Display(Name ="id")]
-        public int ClientID { get; set; }
+        public int Id { get; set; }
 
         [Required]
         [Display(Name ="First name")]

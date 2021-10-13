@@ -52,7 +52,7 @@ namespace JohariWindow.Pages.Clients
             {
                 ApplicationUserId = claim.Value;
                 Client cl = _unitOfWork.Client.Get(u => u.ASPNETUserID == ApplicationUserId);
-                int clientID = cl.ClientID;
+                int clientID = cl.Id;
                 //get first and last name
                 userName = cl.FirstName + " " + cl.LastName;
             }

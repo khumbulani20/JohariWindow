@@ -44,10 +44,10 @@ namespace JohariWindow.Pages.Clients
                     {
                         ClientResponse = new ClientResponse();
                         //edit category
-                        if (client.ClientID != 0)
+                        if (client.Id != 0)
                         {
 
-                            ClientResponse = _unitofWork.ClientResponse.Get(u => u.ClientID == client.ClientID);
+                            ClientResponse = _unitofWork.ClientResponse.Get(u => u.ClientID == client.Id);
                             if (ClientResponse == null) return NotFound();
                         }
                     }

@@ -2,8 +2,139 @@
 @model JohariWindow.Pages.Admin.JohariModel
 @{
 }
-<div>
+<div class="text-center">
 
-    <h1>some header</h1>
-    <p>@Model.ClientId</p>
+    <h6>Johari Window for Client : </h6>
+    <h6>@Model.ClientObj.FirstName, @Model.ClientObj.LastName</h6>
+   
+</div>
+
+
+<div class="border backgroundWhite container  ">
+    <div class="row  ">
+
+
+        <div class="col-6 border">
+            <table >
+
+
+
+                <thead>
+                    <tr>
+                        <th>Open <br /></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Queries)
+                    {
+                        if (item.Value > 0)
+                        {
+                            <tr>
+                                <td>
+                                    @item.Key
+                                </td>
+                                <td>
+                                    @item.Value
+                                </td>
+                            </tr>
+                        }
+
+                    }
+                </tbody>
+            </table>
+
+        </div>
+
+        <div class="col-6 border">
+            <table>
+
+
+
+                <thead>
+                    <tr>
+                        <th>Blind Self <br /></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.FQueries)
+                    {
+                        if (item.Value > 0)
+                        {
+                            <tr>
+                                <td>
+                                    @item.Key
+                                </td>
+                                <td>
+                                    @item.Value
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+    <div class="row">
+
+    
+    <div class="col-6 border">
+        <table>
+
+
+
+            <thead>
+                <tr>
+                    <th>Hidden Self <br /></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Queries)
+                {
+                    if (item.Value == 0)
+                    {
+                        <tr>
+                            <td>
+                                @item.Key
+                            </td>
+                            <td>
+                                @item.Value
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+    </div>
+    <div class="col-6 border">
+        <table>
+
+
+
+            <thead>
+                <tr>
+                    <th>Unknown Self <br /></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.UQueries)
+                {
+
+                    <tr>
+                        <td>
+                            @item
+                        </td>
+                        <td>
+                            @item
+                        </td>
+                    </tr>
+
+                }
+            </tbody>
+        </table>
+
+    </div>
+        </div>
+
 </div>

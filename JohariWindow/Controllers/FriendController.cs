@@ -54,7 +54,7 @@ namespace JohariWindow.Controllers
                 // ClientResponse respo = _unitOfWork.ClientResponse.Get(u=>u.ClientID==client.ClientID);
 
                 //gets list of all responses
-                IEnumerable<ClientResponse> list = _unitOfWork.ClientResponse.List(u => u.ClientID == client.ClientID);
+                IEnumerable<ClientResponse> list = _unitOfWork.ClientResponse.List(u => u.ClientID == client.Id);
                 // _unitOfWork.ClientResponse.Update(ClientResponse);
                 if (list.Count() > 0)//he has responses update
                 {
@@ -77,7 +77,7 @@ namespace JohariWindow.Controllers
 
                                 //get client response from list and update
                                 list.ElementAt(count).AdjectiveID = Int32.Parse(Adjective.Value);
-                                list.ElementAt(count).ClientID = client.ClientID;
+                                list.ElementAt(count).ClientID = client.Id;
                                 //resp.AdjectiveID = Int32.Parse(Adjective.Value);
                                 //resp.ResponseID = ids[count];
                                 //resp.ClientID = client.ClientID;
@@ -117,7 +117,7 @@ namespace JohariWindow.Controllers
                             {
                                 resp.AdjectiveID = Int32.Parse(Adjective.Value);
 
-                                resp.ClientID = client.ClientID;
+                                resp.ClientID = client.Id;
                                 //save to db
                                 _unitOfWork.ClientResponse.Add(resp);
 
@@ -145,7 +145,7 @@ namespace JohariWindow.Controllers
                 string cliId = Request.Form["userid"];
 
                 Client cl = _unitOfWork.Client.Get(u => u.ASPNETUserID == cliId);
-                int clID = cl.ClientID;
+                int clID = cl.Id;
                 foreach (SelectListItem Adjective in ClientObj.AdjectivesList)
                 {
                     if (Adjective.Selected)
